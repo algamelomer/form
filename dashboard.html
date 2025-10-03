@@ -73,9 +73,14 @@
     <div id="dashboard-screen" class="hidden p-4 sm:p-6 lg:p-8">
         <header class="flex flex-wrap justify-between items-center mb-6 pb-4 border-b">
             <h1 class="text-3xl font-bold text-gray-800">بيانات الطلاب المسجلين</h1>
-            <button id="logout-button" class="bg-red-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 transition mt-4 sm:mt-0">
-                تسجيل الخروج
-            </button>
+             <div class="flex items-center gap-4 mt-4 sm:mt-0">
+                <button id="delete-all-button" class="bg-red-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 transition">
+                    حذف جميع البيانات
+                </button>
+                <button id="logout-button" class="bg-gray-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-300 transition">
+                    تسجيل الخروج
+                </button>
+            </div>
         </header>
 
         <div class="bg-white shadow-lg rounded-xl p-6">
@@ -96,6 +101,7 @@
                             <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الرقم القومي</th>
                             <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider sortable" data-column="4">المؤهل</th>
                             <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider sortable" data-column="5">المجموع</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الشكوي</th>
                             <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">بطاقة الترشيح</th>
                         </tr>
                     </thead>
@@ -122,18 +128,16 @@
         const loginForm = document.getElementById('login-form');
         const logoutButton = document.getElementById('logout-button');
         const fetchDataButton = document.getElementById('fetch-data-button');
+        const deleteAllButton = document.getElementById('delete-all-button');
         const tableBody = document.getElementById('table-body');
         const statusContainer = document.getElementById('status-container');
         const loginError = document.getElementById('login-error');
         
-        // Modal elements
         const imageModal = document.getElementById('image-modal');
         const modalImage = document.getElementById('modal-image');
         const modalCloseButton = document.getElementById('modal-close-button');
 
-
-        // IMPORTANT: Replace with your Google Apps Script URL
-        const googleScriptUrl = 'https://script.google.com/macros/s/AKfycbxl2EdgbEELGentckIrEUymdu-vsoYUpQ4j1EJOdyYYubcRWlnCeji6enCK1VmaVaQSLQ/exec';
+        const googleScriptUrl = 'https://script.google.com/macros/s/AKfycbwNJlr05_tvef7czjMuS85U8-RI82uxOYtQYoFNmSMYDnw_sFpjNhhXAU_Dd12HVxjd2w/exec';
         
         let studentData = [];
         let sortColumn = -1;
@@ -176,11 +180,10 @@
         async function fetchData() {
             statusContainer.innerHTML = `<div class="flex items-center gap-2"><div class="loader"></div><span>جاري تحميل البيانات...</span></div>`;
             fetchDataButton.disabled = true;
+            deleteAllButton.disabled = true;
             try {
                 const response = await fetch(googleScriptUrl);
-                if (!response.ok) {
-                    throw new Error(`Network response was not ok: ${response.statusText}`);
-                }
+                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
                 studentData = await response.json();
                 renderTable();
                 statusContainer.textContent = `تم التحديث بنجاح. إجمالي السجلات: ${studentData.length}`;
@@ -189,13 +192,14 @@
                 statusContainer.textContent = 'فشل في تحميل البيانات. تأكد من إعادة نشر الـ Script.';
             } finally {
                 fetchDataButton.disabled = false;
+                deleteAllButton.disabled = false;
             }
         }
 
         function renderTable() {
             tableBody.innerHTML = '';
             if (!Array.isArray(studentData) || studentData.length === 0) {
-                 tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-gray-500">لا توجد بيانات لعرضها.</td></tr>`;
+                 tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-gray-500">لا توجد بيانات لعرضها.</td></tr>`;
                  return;
             }
             
@@ -219,8 +223,9 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${row[3] || ''}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${row[4] || ''}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${row[5] || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${row[6] || ''}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                        <a href="${row[6] || '#'}" class="view-image-link text-indigo-600 hover:text-indigo-900 ${!row[6] ? 'opacity-50 pointer-events-none' : ''}">
+                        <a href="${row[7] || '#'}" class="view-image-link text-indigo-600 hover:text-indigo-900 ${!row[7] ? 'opacity-50 pointer-events-none' : ''}">
                             عرض الصورة
                         </a>
                     </td>
@@ -238,9 +243,7 @@
                     sortColumn = column;
                     sortDirection = 'asc';
                 }
-                document.querySelectorAll('th.sortable').forEach(th => {
-                    th.classList.remove('sorted-asc', 'sorted-desc');
-                });
+                document.querySelectorAll('th.sortable').forEach(th => th.classList.remove('sorted-asc', 'sorted-desc'));
                 header.classList.add(sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc');
                 renderTable();
             });
@@ -248,23 +251,61 @@
 
         fetchDataButton.addEventListener('click', fetchData);
 
+        // --- Delete All Logic ---
+        deleteAllButton.addEventListener('click', () => {
+            const confirmation = prompt("هذا الإجراء سيحذف جميع بيانات الطلاب والصور بشكل دائم. للتأكيد، اكتب 'حذف الكل' للمتابعة:");
+            if (!confirmation || confirmation.trim().replace(/\s+/g, ' ') !== 'حذف الكل') {
+                alert('تم إلغاء عملية الحذف.');
+                return;
+            }
 
-        // --- ll Logic ---
-        // Make 'عرض الصورة' open the image in a new tab, converting Google Drive links if needed
-        tableBody.addEventListener('click', (e) => {
-            if (e.target.classList.contains('view-image-link')) {
-                e.preventDefault();
-                let url = e.target.href;
-                const driveMatch = url.match(/https?:\/\/drive\.google\.com\/file\/d\/([\w-]+)\/view.*/);
-                if (driveMatch) {
-                    url = `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
-                }
-                window.open(url, '_blank');
+            const password = prompt('الرجاء إدخال كلمة مرور المسؤول للمتابعة:');
+            if (password === 'ch3405') {
+                deleteAllData();
+            } else if (password) { // Only show error if they entered something
+                alert('كلمة المرور غير صحيحة. تم إلغاء العملية.');
             }
         });
 
+        async function deleteAllData() {
+            statusContainer.innerHTML = `<div class="flex items-center gap-2 text-red-600"><div class="loader" style="border-top-color: #dc2626;"></div><span>جاري حذف جميع البيانات...</span></div>`;
+            deleteAllButton.disabled = true;
+            fetchDataButton.disabled = true;
 
-        // Initial check on page load
+            try {
+                const response = await fetch(googleScriptUrl, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'deleteAll' }),
+                });
+                const result = await response.json();
+                if (result.result === 'success') {
+                    statusContainer.textContent = 'تم حذف جميع البيانات بنجاح!';
+                    studentData = [];
+                    renderTable();
+                } else {
+                    throw new Error(result.error || 'فشل حذف البيانات.');
+                }
+            } catch (error) {
+                console.error('Delete Error:', error);
+                statusContainer.textContent = `فشل الحذف: ${error.message}`;
+            } finally {
+                deleteAllButton.disabled = false;
+                fetchDataButton.disabled = false;
+            }
+        }
+
+
+        // --- Modal Logic Removed ---
+        // Only open the link in a new tab
+        tableBody.addEventListener('click', (e) => {
+            if (e.target.classList.contains('view-image-link')) {
+                if (e.target.href && e.target.href !== '#') {
+                    window.open(e.target.href, '_blank');
+                }
+                e.preventDefault();
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', checkSession);
     </script>
 </body>
