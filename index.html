@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة تسجيل الطلاب الجدد - قسم IT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #4f46e5;
+            width: 32px;
+            height: 32px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="relative min-h-screen w-full flex flex-col items-center justify-center p-4 bg-cover bg-center" style="background-image: url('images/background.jpg');">
+        
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+
+        <div class="relative z-10 w-full flex flex-col items-center justify-center">
+            
+            <header class="w-full flex flex-col sm:flex-row items-center justify-around mb-8 px-4 text-center">
+                <img src="images/Information-Technology-Department.png" alt="IT logo" class="h-20 w-20 md:h-24 md:w-24 object-contain p-1 mb-4 sm:mb-0 rounded-full">
+                <h1 class="text-2xl md:text-4xl font-extrabold text-white text-shadow-lg mx-4">
+                    مرحبا بك في قسم تكنولوجيا المعلومات
+                </h1>
+                <img src="images/batu.png" alt="BATU logo" class="h-20 w-20 md:h-24 md:w-24 object-contain p-1 mt-4 sm:mt-0 rounded-full">
+            </header>
+
+            <div class="w-full max-w-2xl bg-white/95 shadow-2xl rounded-2xl p-6 md:p-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800">بوابة تسجيل الطلاب الجدد</h2>
+                    <p class="text-gray-600 mt-2">يرجى تعبئة البيانات التالية بدقة</p>
+                </div>
+
+                <form id="student-form" class="space-y-6">
+                    <!-- Name -->
+                    <div>
+                        <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">الاسم بالكامل</label>
+                        <input type="text" id="name" name="name" placeholder="ادخل اسمك الرباعي باللغة العربية" required
+                               class="w-full px-4 py-3 text-lg bg-gray-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                    </div>
+
+                    <!-- Mobile & National ID -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="mobile" class="block text-sm font-semibold text-gray-700 mb-2">رقم الموبايل</label>
+                            <input type="tel" id="mobile" name="mobile" placeholder="مثال: 01012345678" required pattern="^01[0-2,5]{1}[0-9]{8}$"
+                                   class="w-full px-4 py-3 text-lg bg-gray-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                        </div>
+                        <div>
+                            <label for="national-id" class="block text-sm font-semibold text-gray-700 mb-2">الرقم القومي</label>
+                            <input type="text" id="national-id" name="nationalId" placeholder="14 رقم" required pattern="\d{14}" inputmode="numeric"
+                                   class="w-full px-4 py-3 text-lg text-center tracking-widest bg-gray-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                        </div>
+                    </div>
+
+                    <!-- Education Type -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">نوع المؤهل السابق</label>
+                        <div class="flex flex-wrap gap-4 items-center mt-2">
+                            <div class="flex items-center">
+                                <input id="general" name="educationType" type="radio" value="ثانوي عام" required class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                <label for="general" class="ml-2 mr-2 block text-sm text-gray-900">ثانوي عام</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="industrial" name="educationType" type="radio" value="ثانوي صناعي ثلاث سنوات" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                <label for="industrial" class="ml-2 mr-2 block text-sm text-gray-900">ثانوي صناعي ثلاث سنوات</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="industrial" name="educationType" type="radio" value="ثانوي صناعي خمس سنوات" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                <label for="industrial" class="ml-2 mr-2 block text-sm text-gray-900">ثانوي صناعي خمس سنوات</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="equivalent" name="educationType" type="radio" value="ما يعادله" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                <label for="equivalent" class="ml-2 mr-2 block text-sm text-gray-900">ما يعادله</label>
+                            </div>
+                        </div>
+                        <!-- Conditional input for "ما يعادله" -->
+                        <div id="equivalent-details-container" class="hidden mt-4">
+                            <label for="equivalent-details" class="block text-sm font-semibold text-gray-700 mb-2">برجاء توضيح المؤهل</label>
+                            <input type="text" id="equivalent-details" name="equivalentDetails" placeholder="اكتب اسم المؤهل هنا" class="w-full px-4 py-3 text-lg bg-gray-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                        </div>
+                    </div>
+
+                    <!-- Total Score -->
+                    <div>
+                        <label for="score" class="block text-sm font-semibold text-gray-700 mb-2">المجموع</label>
+                        <input type="number" id="score" name="score" placeholder="ادخل مجموعك" step="0.01" required
+                               class="w-full px-4 py-3 text-lg bg-gray-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                    </div>
+
+                    <!-- Nomination Card Image -->
+                    <div>
+                        <label for="nomination-card" class="block text-sm font-semibold text-gray-700 mb-2">صورة بطاقة الترشيح</label>
+                        <input type="file" id="nomination-card" name="nominationCard" required accept="image/png, image/jpeg, image/jpg"
+                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition">
+                        <p class="mt-1 text-xs text-gray-500">يجب أن تكون الصورة بصيغة PNG, JPG أو JPEG.</p>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div>
+                        <button type="submit" id="submit-button"
+                                class="w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 transition-transform transform hover:scale-105">
+                            تسجيل البيانات
+                        </button>
+                    </div>
+                </form>
+                
+                <div id="status-container" class="mt-6 text-center"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('student-form');
+        const submitButton = document.getElementById('submit-button');
+        const statusContainer = document.getElementById('status-container');
+        const googleScriptUrl = 'https://script.google.com/macros/s/AKfycbxl2EdgbEELGentckIrEUymdu-vsoYUpQ4j1EJOdyYYubcRWlnCeji6enCK1VmaVaQSLQ/exec';
+
+        // Logic for conditional "Equivalent" field
+        const educationRadios = document.querySelectorAll('input[name="educationType"]');
+        const equivalentDetailsContainer = document.getElementById('equivalent-details-container');
+        const equivalentDetailsInput = document.getElementById('equivalent-details');
+
+        educationRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (radio.value === 'ما يعادله' && radio.checked) {
+                    equivalentDetailsContainer.classList.remove('hidden');
+                    equivalentDetailsInput.required = true;
+                } else {
+                    equivalentDetailsContainer.classList.add('hidden');
+                    equivalentDetailsInput.required = false;
+                }
+            });
+        });
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (googleScriptUrl === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                showStatus('خطأ: برجاء إعداد رابط Google Apps Script أولاً في ملف index.html.', 'error');
+                return;
+            }
+            
+            showLoading();
+
+            const file = document.getElementById('nomination-card').files[0];
+            if (!file) {
+                showStatus('برجاء رفع صورة بطاقة الترشيح.', 'error');
+                hideLoading();
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                const fileContent = reader.result.split('base64,')[1];
+                
+                const selectedEducationRadio = document.querySelector('input[name="educationType"]:checked');
+                let educationValue = selectedEducationRadio.value;
+                if (educationValue === 'ما يعادله') {
+                    const details = equivalentDetailsInput.value;
+                    educationValue = `ما يعادله: ${details}`;
+                }
+
+                const formData = {
+                    timestamp: new Date().toLocaleString('ar-EG'),
+                    name: document.getElementById('name').value,
+                    mobile: document.getElementById('mobile').value,
+                    nationalId: document.getElementById('national-id').value,
+                    educationType: educationValue,
+                    score: document.getElementById('score').value,
+                    fileName: file.name,
+                    mimeType: file.type,
+                    fileContent: fileContent,
+                };
+
+                fetch(googleScriptUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.result === 'success') {
+                        showStatus('تم تسجيل بياناتك بنجاح!', 'success');
+                        form.reset();
+                        equivalentDetailsContainer.classList.add('hidden');
+                        equivalentDetailsInput.required = false;
+
+                    } else {
+                        throw new Error(data.error || 'حدث خطأ غير متوقع.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showStatus(`فشل التسجيل: ${error.message}`, 'error');
+                })
+                .finally(() => {
+                    hideLoading();
+                });
+            };
+            
+            reader.onerror = error => {
+                console.error('File reading error:', error);
+                showStatus('فشل في قراءة الملف المرفق.', 'error');
+                hideLoading();
+            };
+        });
+
+        function showLoading() {
+            submitButton.disabled = true;
+            submitButton.innerHTML = `<div class="flex justify-center items-center"><div class="loader"></div><span class="mr-3">جاري الإرسال...</span></div>`;
+            statusContainer.innerHTML = '';
+        }
+
+        function hideLoading() {
+            submitButton.disabled = false;
+            submitButton.innerHTML = 'تسجيل البيانات';
+        }
+
+        function showStatus(message, type) {
+            const color = type === 'success' ? 'green' : 'red';
+            statusContainer.innerHTML = `<div class="p-4 rounded-lg bg-${color}-100 border-r-4 border-${color}-500 text-${color}-700 shadow-lg" role="alert"><p>${message}</p></div>`;
+        }
+    </script>
+
+</body>
+</html>
+
+
