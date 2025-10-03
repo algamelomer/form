@@ -161,11 +161,7 @@
             showLoading();
 
             const file = document.getElementById('nomination-card').files[0];
-            if (!file) {
-                showStatus('برجاء رفع صورة بطاقة الترشيح.', 'error');
-                hideLoading();
-                return;
-            }
+            // If file is not uploaded, continue without blocking
 
             const reader = new FileReader();
             reader.readAsDataURL(file);
